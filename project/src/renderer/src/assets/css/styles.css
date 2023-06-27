@@ -1,0 +1,12 @@
+@font-face {
+  font-family: 'cat-font';
+  src: url('../fonts/cat_font.ttf');
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-size: 10px;
+  font-family: cat-font;
+}

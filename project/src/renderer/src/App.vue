@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { NConfigProvider, darkTheme, zhCN, dateZhCN } from 'naive-ui'
+import { NConfigProvider, zhCN, dateZhCN } from 'naive-ui'
 import MenuBar from './components/MenuBar.vue'
 import Anchor from './components/anchor/Anchor.vue'
 import { holiday, leaveTime, overTime, personnel, scheduling } from './utils/dbType'
@@ -40,7 +40,7 @@ schedulingSelect().then((res: scheduling[]) => {
 </script>
 
 <template>
-  <n-config-provider :locale="zhCN" :date-locale="dateZhCN" :theme="darkTheme">
+  <n-config-provider :locale="zhCN" :date-locale="dateZhCN">
     <n-notification-provider>
       <div class="container">
         <MenuBar />
@@ -59,7 +59,7 @@ schedulingSelect().then((res: scheduling[]) => {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: rgb(16, 16, 20);
+  background-color: #f8f9fa;
 }
 .main {
   width: 100vw;

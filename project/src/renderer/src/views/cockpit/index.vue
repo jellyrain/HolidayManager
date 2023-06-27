@@ -30,7 +30,7 @@ const columns = computed(() => {
 })
 
 // 使用计算属性 计算表格数据
-const data = computed(() => {
+const datas = computed(() => {
   const result: any = []
 
   const holidayObject = {}
@@ -41,21 +41,31 @@ const data = computed(() => {
     .forEach((holiday) => {
       holidayObject[holiday.id] = null
     })
-  store.personnel.forEach((personnel) => {
-    const data = {
-      id: personnel.id,
-      name: personnel.name,
-      ...holidayObject
-    }
-    store.scheduling
-      .filter((scheduling) => scheduling.personnelId == personnel.id)
-      .forEach((item) => {
-        data[item.holidayId] = item.vacationTime
-      })
-    result.push(data)
-  })
+  store.personnel
+    .filter((item) => {
+      return item.status == 1
+    })
+    .forEach((personnel) => {
+      const data = {
+        id: personnel.id,
+        name: personnel.name,
+        ...holidayObject
+      }
+      store.scheduling
+        .filter((scheduling) => scheduling.personnelId == personnel.id)
+        .forEach((item) => {
+          data[item.holidayId] = item.vacationTime
+        })
+      result.push(data)
+    })
 
   return result
+})
+
+const data = computed(() => {
+  return datas.value.filter((item) => {
+    return item.name.includes(selectName.value)
+  })
 })
 
 // 弹窗

@@ -21,7 +21,7 @@ const { close, minimum, maximum } = window.api as {
   display: flex;
   align-items: center;
   padding: 0 15px;
-  background-color: #212529;
+  background-color: #f1f3f5;
   -webkit-app-region: drag;
   z-index: 99;
 }
@@ -55,6 +55,7 @@ const { close, minimum, maximum } = window.api as {
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 50px;
   z-index: 1;
 }
 

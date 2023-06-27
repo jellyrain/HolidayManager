@@ -45,7 +45,7 @@ const routerPush = (path: string) => {
   width: 100%;
   margin-top: 10px;
   list-style-type: none;
-  color: #adb5bd;
+  color: #343a40;
 }
 
 .meun li {
@@ -59,8 +59,8 @@ const routerPush = (path: string) => {
 
 .meun li:hover,
 .active {
-  color: #fff;
-  background-color: #adb5bd;
+  color: #37b24d;
+  background-color: #d4ebe0;
 }
 
 .icon {

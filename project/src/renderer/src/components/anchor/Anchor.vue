@@ -18,7 +18,7 @@ import Meun from './Meun.vue'
   width: 250px;
   height: 680px;
   padding: 10px 20px;
-  background-color: rgb(24, 24, 28);
+  background-color: #f1f3f5;
   z-index: 99;
 }
 
@@ -33,13 +33,13 @@ import Meun from './Meun.vue'
 .favicon {
   width: 45px;
   height: 45px;
-  color: #f1f3f5;
+  color: #343a40;
   border-radius: 50%;
   margin: 20px 0;
 }
 
 .title p {
   font-size: 25px;
-  color: #f1f3f5;
+  color: #343a40;
 }
 </style>

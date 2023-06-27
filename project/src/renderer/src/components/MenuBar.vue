@@ -1,8 +1,19 @@
 <script setup lang="ts">
+import { useNotification } from 'naive-ui'
 const { close, minimum, maximum } = window.api as {
   close: () => void
   minimum: () => void
   maximum: () => void
+}
+
+const notification = useNotification()
+const notificationFunc = () => {
+  notification.info({
+    content: '提示',
+    meta: '页面现在没做响应式所以不支持全屏',
+    duration: 2000,
+    keepAliveOnHover: true
+  })
 }
 </script>
 
@@ -10,7 +21,7 @@ const { close, minimum, maximum } = window.api as {
   <div class="menu">
     <button class="btn red" @click="close"></button>
     <button class="btn yellow" @click="minimum"></button>
-    <button class="btn green" @click="maximum"></button>
+    <button class="btn green" @click="notificationFunc"></button>
   </div>
 </template>
 

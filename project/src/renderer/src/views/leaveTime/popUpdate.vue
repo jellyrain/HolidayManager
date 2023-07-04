@@ -3,7 +3,8 @@ import { toRaw } from 'vue'
 import { leaveTime } from '../../utils/dbType'
 import { useStore } from '../../store/index'
 
-const { leaveTimeUpdate } = window.api as {
+const { leaveTimeSelect, leaveTimeUpdate } = window.api as {
+  leaveTimeSelect: () => Promise<leaveTime[]>
   leaveTimeUpdate: (data: leaveTime) => void
 }
 
@@ -25,17 +26,6 @@ const rules = {
   }
 }
 
-const unitOptions = [
-  {
-    label: '小时',
-    value: 'h'
-  },
-  {
-    label: '天',
-    value: 'd'
-  }
-]
-
 const statusOptions = [
   {
     label: '禁用',
@@ -50,7 +40,9 @@ const statusOptions = [
 // 修改数据
 const handleUpdate = () => {
   leaveTimeUpdate(toRaw(model))
-  store.updateLeaveTime(model)
+  leaveTimeSelect().then((res: leaveTime[]) => {
+    store.setLeaveTime(res)
+  })
   props.falseModal()
 }
 </script>
@@ -71,14 +63,6 @@ const handleUpdate = () => {
     </n-form-item>
     <n-form-item label="休假名称" path="name">
       <n-input v-model:value="model.name" placeholder="请输入 休假名称" />
-    </n-form-item>
-    <n-form-item label="计算单位" path="unit">
-      <n-select
-        v-model:value="model.unit"
-        placeholder="Select"
-        :options="unitOptions"
-        disabled="false"
-      />
     </n-form-item>
     <n-form-item label="当前状态" path="status">
       <n-select v-model:value="model.status" placeholder="Select" :options="statusOptions" />

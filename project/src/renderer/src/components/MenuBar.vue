@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useNotification } from 'naive-ui'
-const { close, minimum, maximum } = window.api as {
+const { close, minimum } = window.api as {
   close: () => void
   minimum: () => void
   maximum: () => void

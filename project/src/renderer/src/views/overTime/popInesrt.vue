@@ -5,7 +5,8 @@ import { uuidv4 } from '../../utils/utils'
 import { overTime } from '../../utils/dbType'
 import { useStore } from '../../store/index'
 
-const { overTimeAdd } = window.api as {
+const { overTimeSelect, overTimeAdd } = window.api as {
+  overTimeSelect: () => Promise<overTime[]>
   overTimeAdd: (data: overTime) => void
 }
 
@@ -22,9 +23,7 @@ const store = useStore()
 const model = reactive<overTime>({
   id: uuidv4(),
   name: '',
-  unit: 'h',
   status: 1,
-  defaultNumber: 1,
   description: ''
 })
 
@@ -41,17 +40,6 @@ const rules = {
     message: '加班计数必须是数字'
   }
 }
-
-const unitOptions = [
-  {
-    label: '小时',
-    value: 'h'
-  },
-  {
-    label: '天',
-    value: 'd'
-  }
-]
 
 const statusOptions = [
   {
@@ -76,17 +64,10 @@ const handleAdd = () => {
     return
   }
 
-  if (model.defaultNumber == null) {
-    notification.warning({
-      content: '提示',
-      meta: '加班计数必须是数字',
-      duration: 2000,
-      keepAliveOnHover: true
-    })
-    return
-  }
   overTimeAdd(toRaw(model))
-  store.overTime.push(model)
+  overTimeSelect().then((res: overTime[]) => {
+    store.setOverTime(res)
+  })
   props.falseModal()
 }
 </script>
@@ -105,14 +86,8 @@ const handleAdd = () => {
     <n-form-item label="加班名称" path="name">
       <n-input v-model:value="model.name" placeholder="请输入 加班名称" />
     </n-form-item>
-    <n-form-item label="计算单位" path="unit">
-      <n-select v-model:value="model.unit" placeholder="Select" :options="unitOptions" />
-    </n-form-item>
     <n-form-item label="当前状态" path="status">
       <n-select v-model:value="model.status" placeholder="Select" :options="statusOptions" />
-    </n-form-item>
-    <n-form-item label="加班计数" path="defaultNumber">
-      <n-input-number v-model:value="model.defaultNumber" />
     </n-form-item>
     <n-form-item label="备注" path="description">
       <n-input

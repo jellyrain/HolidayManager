@@ -15,9 +15,7 @@ const store = useStore()
 const model = ref<overTime>({
   id: '',
   name: '',
-  unit: 'h',
   status: 1,
-  defaultNumber: 0,
   description: ''
 })
 

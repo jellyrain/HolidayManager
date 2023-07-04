@@ -3,7 +3,8 @@ import { toRaw } from 'vue'
 import { overTime } from '../../utils/dbType'
 import { useStore } from '../../store/index'
 
-const { overTimeUpdate } = window.api as {
+const { overTimeSelect, overTimeUpdate } = window.api as {
+  overTimeSelect: () => Promise<overTime[]>
   overTimeUpdate: (data: overTime) => void
 }
 
@@ -25,17 +26,6 @@ const rules = {
   }
 }
 
-const unitOptions = [
-  {
-    label: '小时',
-    value: 'h'
-  },
-  {
-    label: '天',
-    value: 'd'
-  }
-]
-
 const statusOptions = [
   {
     label: '禁用',
@@ -50,7 +40,9 @@ const statusOptions = [
 // 修改数据
 const handleUpdate = () => {
   overTimeUpdate(toRaw(model))
-  store.updateOverTime(model)
+  overTimeSelect().then((res: overTime[]) => {
+    store.setOverTime(res)
+  })
   props.falseModal()
 }
 </script>
@@ -72,19 +64,8 @@ const handleUpdate = () => {
     <n-form-item label="加班名称" path="name">
       <n-input v-model:value="model.name" placeholder="请输入 加班名称" />
     </n-form-item>
-    <n-form-item label="计算单位" path="unit">
-      <n-select
-        v-model:value="model.unit"
-        placeholder="Select"
-        :options="unitOptions"
-        disabled="false"
-      />
-    </n-form-item>
     <n-form-item label="当前状态" path="status">
       <n-select v-model:value="model.status" placeholder="Select" :options="statusOptions" />
-    </n-form-item>
-    <n-form-item label="加班计数" path="defaultNumber">
-      <n-input-number v-model:value="model.defaultNumber" disabled="false" />
     </n-form-item>
     <n-form-item label="备注" path="description">
       <n-input

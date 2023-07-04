@@ -15,13 +15,12 @@ const store = useStore()
 const model = ref<leaveTime>({
   id: '',
   name: '',
-  unit: 'h',
   status: 1,
   description: ''
 })
 
 const data = computed(() => {
-  return store.leaveTime.filter((item) => {
+  return store.getLeaveTime.filter((item) => {
     return item.name.includes(selectName.value)
   })
 })

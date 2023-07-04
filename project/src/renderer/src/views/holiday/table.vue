@@ -12,7 +12,8 @@ const props = defineProps<{
   }
 }>()
 
-const { holidayDelete } = window.api as {
+const { holidaySelect, holidayDelete } = window.api as {
+  holidaySelect: () => Promise<holiday[]>
   holidayDelete: (id: string) => void
 }
 
@@ -26,20 +27,15 @@ const pagination = {
 
 function handleDelete(row) {
   holidayDelete(row.id)
-  store.deleteHoliday(row.id)
+  holidaySelect().then((res: holiday[]) => {
+    store.setHoliday(res)
+  })
 }
 
 const columns = [
   {
     title: '假期名称',
     key: 'name'
-  },
-  {
-    title: '计算单位',
-    key: 'unit',
-    render(row) {
-      return row.unit == 'h' ? '小时' : '天'
-    }
   },
   {
     title: '当前状态',

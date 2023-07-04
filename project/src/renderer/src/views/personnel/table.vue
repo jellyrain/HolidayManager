@@ -11,7 +11,8 @@ const props = defineProps<{
   }
 }>()
 
-const { personnelDelete } = window.api as {
+const { personnelSelect, personnelDelete } = window.api as {
+  personnelSelect: () => Promise<personnel[]>
   personnelDelete: (id: string) => void
 }
 
@@ -25,7 +26,9 @@ const pagination = {
 
 function handleDelete(row) {
   personnelDelete(row.id)
-  store.deletePersonnel(row.id)
+  personnelSelect().then((res: personnel[]) => {
+    store.setPersonnel(res)
+  })
 }
 
 const columns = [

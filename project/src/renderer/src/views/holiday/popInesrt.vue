@@ -6,7 +6,8 @@ import { uuidv4 } from '../../utils/utils'
 import { holiday } from '../../utils/dbType'
 import { useStore } from '../../store/index'
 
-const { holidayAdd } = window.api as {
+const { holidaySelect, holidayAdd } = window.api as {
+  holidaySelect: () => Promise<holiday[]>
   holidayAdd: (data: holiday) => void
 }
 
@@ -23,7 +24,6 @@ const store = useStore()
 const model = reactive<holiday>({
   id: uuidv4(),
   name: '',
-  unit: 'd',
   status: 1,
   reset: 0,
   startTime: dayjs().valueOf(),
@@ -43,17 +43,6 @@ const rules = {
     message: '开始时间是必填的'
   }
 }
-
-const unitOptions = [
-  {
-    label: '小时',
-    value: 'h'
-  },
-  {
-    label: '天',
-    value: 'd'
-  }
-]
 
 const statusOptions = [
   {
@@ -88,17 +77,12 @@ const handleAdd = () => {
     })
   } else {
     holidayAdd(toRaw(model))
-    store.holiday.push(model)
+    holidaySelect().then((res: holiday[]) => {
+      store.setHoliday(res)
+    })
     props.falseModal()
   }
 }
-
-notification.info({
-  content: '配置提示',
-  meta: '假期的 计算单位 暂未使用！',
-  duration: 4000,
-  keepAliveOnHover: true
-})
 </script>
 
 <template>
@@ -114,14 +98,6 @@ notification.info({
   >
     <n-form-item label="假期名称" path="name">
       <n-input v-model:value="model.name" placeholder="请输入 假期名称" />
-    </n-form-item>
-    <n-form-item label="计算单位" path="unit">
-      <n-select
-        v-model:value="model.unit"
-        placeholder="Select"
-        :options="unitOptions"
-        disabled="false"
-      />
     </n-form-item>
     <n-form-item label="当前状态" path="status">
       <n-select v-model:value="model.status" placeholder="Select" :options="statusOptions" />

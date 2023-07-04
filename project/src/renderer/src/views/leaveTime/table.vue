@@ -11,7 +11,8 @@ const props = defineProps<{
   }
 }>()
 
-const { leaveTimeDelete } = window.api as {
+const { leaveTimeSelect, leaveTimeDelete } = window.api as {
+  leaveTimeSelect: () => Promise<leaveTime[]>
   leaveTimeDelete: (id: string) => void
 }
 
@@ -25,20 +26,15 @@ const pagination = {
 
 function handleDelete(row) {
   leaveTimeDelete(row.id)
-  store.deleteLeaveTime(row.id)
+  leaveTimeSelect().then((res: leaveTime[]) => {
+    store.setLeaveTime(res)
+  })
 }
 
 const columns = [
   {
     title: '休假名称',
     key: 'name'
-  },
-  {
-    title: '计算单位',
-    key: 'unit',
-    render(row) {
-      return row.unit == 'h' ? '小时' : '天'
-    }
   },
   {
     title: '当前状态',

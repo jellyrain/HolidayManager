@@ -5,7 +5,8 @@ import { uuidv4 } from '../../utils/utils'
 import { leaveTime } from '../../utils/dbType'
 import { useStore } from '../../store/index'
 
-const { leaveTimeAdd } = window.api as {
+const { leaveTimeSelect, leaveTimeAdd } = window.api as {
+  leaveTimeSelect: () => Promise<leaveTime[]>
   leaveTimeAdd: (data: leaveTime) => void
 }
 
@@ -22,7 +23,6 @@ const store = useStore()
 const model = reactive<leaveTime>({
   id: uuidv4(),
   name: '',
-  unit: 'h',
   status: 1,
   description: ''
 })
@@ -34,17 +34,6 @@ const rules = {
     message: '休假名称是必填的'
   }
 }
-
-const unitOptions = [
-  {
-    label: '小时',
-    value: 'h'
-  },
-  {
-    label: '天',
-    value: 'd'
-  }
-]
 
 const statusOptions = [
   {
@@ -68,7 +57,9 @@ const handleAdd = () => {
     })
   } else {
     leaveTimeAdd(toRaw(model))
-    store.leaveTime.push(model)
+    leaveTimeSelect().then((res: leaveTime[]) => {
+      store.setLeaveTime(res)
+    })
     props.falseModal()
   }
 }
@@ -87,9 +78,6 @@ const handleAdd = () => {
   >
     <n-form-item label="休假名称" path="name">
       <n-input v-model:value="model.name" placeholder="请输入 休假名称" />
-    </n-form-item>
-    <n-form-item label="计算单位" path="unit">
-      <n-select v-model:value="model.unit" placeholder="Select" :options="unitOptions" />
     </n-form-item>
     <n-form-item label="当前状态" path="status">
       <n-select v-model:value="model.status" placeholder="Select" :options="statusOptions" />

@@ -2,7 +2,6 @@
 type holiday = {
   id: string
   name: string
-  unit: string
   status: number
   reset: number
   startTime: string | number
@@ -23,7 +22,6 @@ type holidayLog = {
 type leaveTime = {
   id: string
   name: string
-  unit: string
   status: number
   description: string
 }
@@ -43,9 +41,7 @@ type leaveTimeLog = {
 type overTime = {
   id: string
   name: string
-  unit: string
   status: number
-  defaultNumber: number
   description: string
 }
 
@@ -55,6 +51,7 @@ type overTimeLog = {
   personnelId: string
   holidayId: string
   overTimeId: string
+  number: number
   logTime?: number
   description: string
 }

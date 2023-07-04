@@ -19,7 +19,7 @@ const model = ref<personnel>({
 })
 
 const data = computed(() => {
-  return store.personnel.filter((item) => {
+  return store.getPersonnel.filter((item) => {
     return item.name.includes(selectName.value)
   })
 })

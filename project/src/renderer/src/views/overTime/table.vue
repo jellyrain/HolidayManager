@@ -11,7 +11,8 @@ const props = defineProps<{
   }
 }>()
 
-const { overTimeDelete } = window.api as {
+const { overTimeSelect, overTimeDelete } = window.api as {
+  overTimeSelect: () => Promise<overTime[]>
   overTimeDelete: (id: string) => void
 }
 
@@ -25,20 +26,15 @@ const pagination = {
 
 function handleDelete(row) {
   overTimeDelete(row.id)
-  store.deleteOverTime(row.id)
+  overTimeSelect().then((res: overTime[]) => {
+    store.setOverTime(res)
+  })
 }
 
 const columns = [
   {
     title: '加班名称',
     key: 'name'
-  },
-  {
-    title: '计算单位',
-    key: 'unit',
-    render(row) {
-      return row.unit == 'h' ? '小时' : '天'
-    }
   },
   {
     title: '当前状态',
@@ -62,10 +58,6 @@ const columns = [
     sorter(rowA, rowB) {
       return rowA.status - rowB.status
     }
-  },
-  {
-    title: '加班计数（单位根据计算单位）',
-    key: 'defaultNumber'
   },
   {
     title: '备注',

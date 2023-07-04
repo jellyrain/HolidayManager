@@ -21,18 +21,18 @@ function holidaySelect() {
 function holidayAdd(data: holiday) {
   sqlite.run(
     `
-        INSERT INTO holiday (id, name, unit, status, reset, startTime, description) VALUES ( ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO holiday (id, name, status, reset, startTime, description) VALUES ( ?, ?, ?, ?, ?, ?)
     `,
-    [data.id, data.name, data.unit, data.status, data.reset, data.startTime, data.description]
+    [data.id, data.name, data.status, data.reset, data.startTime, data.description]
   )
 }
 
 function holidayUpdate(data: holiday) {
   sqlite.run(
     `
-        UPDATE holiday SET name = ?, unit = ?, status = ?, reset = ?, startTime = ?, description = ? WHERE id = ?
+        UPDATE holiday SET name = ?, status = ?, reset = ?, startTime = ?, description = ? WHERE id = ?
     `,
-    [data.name, data.unit, data.status, data.reset, data.startTime, data.description, data.id]
+    [data.name, data.status, data.reset, data.startTime, data.description, data.id]
   )
 }
 
@@ -54,18 +54,18 @@ function leaveTimeSelect() {
 function leaveTimeAdd(data: leaveTime) {
   sqlite.run(
     `
-        INSERT INTO leaveTime (id, name, unit, status, description) VALUES ( ?, ?, ?, ?, ?)
+        INSERT INTO leaveTime (id, name, status, description) VALUES ( ?, ?, ?, ?)
     `,
-    [data.id, data.name, data.unit, data.status, data.description]
+    [data.id, data.name, data.status, data.description]
   )
 }
 
 function leaveTimeUpdate(data: leaveTime) {
   sqlite.run(
     `
-        UPDATE leaveTime SET name = ?, unit = ?, status = ?, description = ? WHERE id = ?
+        UPDATE leaveTime SET name = ?, status = ?, description = ? WHERE id = ?
     `,
-    [data.name, data.unit, data.status, data.description, data.id]
+    [data.name, data.status, data.description, data.id]
   )
 }
 
@@ -87,18 +87,20 @@ function overTimeSelect() {
 function overTimeAdd(data: overTime) {
   sqlite.run(
     `
-        INSERT INTO overTime (id, name, unit, status, defaultNumber, description) VALUES ( ?, ?, ?, ?, ?, ?)
+        INSERT INTO overTime (id, name, status, description) VALUES ( ?, ?, ?, ?)
     `,
-    [data.id, data.name, data.unit, data.status, data.defaultNumber, data.description]
+    [data.id, data.name, data.status, data.description]
   )
 }
 
 function overTimeUpdate(data: overTime) {
+  console.log(data)
+
   sqlite.run(
     `
-        UPDATE overTime SET name = ?, unit = ?, status = ?, defaultNumber = ?, description = ? WHERE id = ?
+        UPDATE overTime SET name = ?, status = ?, description = ? WHERE id = ?
     `,
-    [data.name, data.unit, data.status, data.defaultNumber, data.description, data.id]
+    [data.name, data.status, data.description, data.id]
   )
 }
 
@@ -263,18 +265,18 @@ function overTimeLogSelect() {
 function overTimeLogAdd(data: overTimeLog) {
   sqlite.run(
     `
-        INSERT INTO overTimeLog (id, personnelId, holidayId, overTimeId, description) VALUES ( ?, ?, ?, ?, ?)
+        INSERT INTO overTimeLog (id, personnelId, holidayId, overTimeId, number, description) VALUES ( ?, ?, ?, ?, ?, ?)
     `,
-    [data.id, data.personnelId, data.holidayId, data.overTimeId, data.description]
+    [data.id, data.personnelId, data.holidayId, data.overTimeId, data.number, data.description]
   )
 }
 
 function overTimeLogUpdate(data: overTimeLog) {
   sqlite.run(
     `
-        UPDATE overTimeLog SET personnelId = ?, holidayId = ?, overTimeId = ?, description = ? WHERE id = ?
+        UPDATE overTimeLog SET personnelId = ?, holidayId = ?, overTimeId = ?, number = ?, description = ? WHERE id = ?
     `,
-    [data.personnelId, data.holidayId, data.overTimeId, data.description, data.id]
+    [data.personnelId, data.holidayId, data.overTimeId, data.number, data.description, data.id]
   )
 }
 

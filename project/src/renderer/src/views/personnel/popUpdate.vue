@@ -3,7 +3,8 @@ import { toRaw } from 'vue'
 import { personnel } from '../../utils/dbType'
 import { useStore } from '../../store/index'
 
-const { personnelUpdate } = window.api as {
+const { personnelSelect, personnelUpdate } = window.api as {
+  personnelSelect: () => Promise<personnel[]>
   personnelUpdate: (data: personnel) => void
 }
 
@@ -39,7 +40,9 @@ const statusOptions = [
 // 修改数据
 const handleUpdate = () => {
   personnelUpdate(toRaw(model))
-  store.updatePersonnel(model)
+  personnelSelect().then((res: personnel[]) => {
+    store.setPersonnel(res)
+  })
   props.falseModal()
 }
 </script>

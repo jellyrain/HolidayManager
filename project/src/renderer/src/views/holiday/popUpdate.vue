@@ -3,7 +3,8 @@ import { reactive, toRaw } from 'vue'
 import { holiday } from '../../utils/dbType'
 import { useStore } from '../../store/index'
 
-const { holidayUpdate } = window.api as {
+const { holidaySelect, holidayUpdate } = window.api as {
+  holidaySelect: () => Promise<holiday[]>
   holidayUpdate: (data: holiday) => void
 }
 
@@ -34,17 +35,6 @@ const rules = {
   }
 }
 
-const unitOptions = [
-  {
-    label: '小时',
-    value: 'h'
-  },
-  {
-    label: '天',
-    value: 'd'
-  }
-]
-
 const statusOptions = [
   {
     label: '禁用',
@@ -70,7 +60,9 @@ const resetOptions = [
 // 修改数据
 const handleUpdate = () => {
   holidayUpdate(toRaw(model))
-  store.updateHoliday(model)
+  holidaySelect().then((res: holiday[]) => {
+    store.setHoliday(res)
+  })
   props.falseModal()
 }
 </script>
@@ -91,14 +83,6 @@ const handleUpdate = () => {
     </n-form-item>
     <n-form-item label="假期名称" path="name">
       <n-input v-model:value="model.name" placeholder="请输入 假期名称" />
-    </n-form-item>
-    <n-form-item label="计算单位" path="unit">
-      <n-select
-        v-model:value="model.unit"
-        placeholder="Select"
-        :options="unitOptions"
-        disabled="false"
-      />
     </n-form-item>
     <n-form-item label="当前状态" path="status">
       <n-select v-model:value="model.status" placeholder="Select" :options="statusOptions" />

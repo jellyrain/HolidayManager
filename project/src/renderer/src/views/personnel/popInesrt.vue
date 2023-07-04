@@ -5,7 +5,8 @@ import { uuidv4 } from '../../utils/utils'
 import { personnel } from '../../utils/dbType'
 import { useStore } from '../../store/index'
 
-const { personnelAdd } = window.api as {
+const { personnelSelect, personnelAdd } = window.api as {
+  personnelSelect: () => Promise<personnel[]>
   personnelAdd: (data: personnel) => void
 }
 
@@ -57,7 +58,9 @@ const handleAdd = () => {
   }
 
   personnelAdd(toRaw(model))
-  store.personnel.push(model)
+  personnelSelect().then((res: personnel[]) => {
+    store.setPersonnel(res)
+  })
   props.falseModal()
 }
 </script>

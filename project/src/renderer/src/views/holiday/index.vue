@@ -15,7 +15,6 @@ const store = useStore()
 const model = ref<holiday>({
   id: '',
   name: '',
-  unit: 'h',
   status: 1,
   startTime: '',
   reset: 0,
@@ -23,7 +22,7 @@ const model = ref<holiday>({
 })
 
 const data = computed(() => {
-  return store.holiday.filter((item) => {
+  return store.getHoliday.filter((item) => {
     return item.name.includes(selectName.value)
   })
 })

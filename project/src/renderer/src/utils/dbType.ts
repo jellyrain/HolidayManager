@@ -5,6 +5,7 @@ type holiday = {
   status: number
   reset: number
   startTime: string | number
+  resetTime: string | number
   description: string
 }
 
@@ -51,6 +52,8 @@ type overTimeLog = {
   personnelId: string
   holidayId: string
   overTimeId: string
+  startTime: string
+  endTime: string
   number: number
   logTime?: number
   description: string

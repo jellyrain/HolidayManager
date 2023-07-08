@@ -12,58 +12,8 @@ const selectName = ref('')
 // 获取状态
 const store = useStore()
 
-// 配置表格（显示假期）
-const columns = computed(() => {
-  return store.holiday
-    .filter((item) => {
-      return item.status == 1
-    })
-    .map((item) => {
-      return {
-        title: item.name + '(天)',
-        key: item.id,
-        render(row) {
-          return row[item.id] == null ? '未配置' : row[item.id]
-        }
-      }
-    })
-})
-
-// 使用计算属性 计算表格数据
-const datas = computed(() => {
-  const result: any = []
-
-  const holidayObject = {}
-  store.holiday
-    .filter((item) => {
-      return item.status == 1
-    })
-    .forEach((holiday) => {
-      holidayObject[holiday.id] = null
-    })
-  store.personnel
-    .filter((item) => {
-      return item.status == 1
-    })
-    .forEach((personnel) => {
-      const data = {
-        id: personnel.id,
-        name: personnel.name,
-        ...holidayObject
-      }
-      store.scheduling
-        .filter((scheduling) => scheduling.personnelId == personnel.id)
-        .forEach((item) => {
-          data[item.holidayId] = item.vacationTime
-        })
-      result.push(data)
-    })
-
-  return result
-})
-
 const data = computed(() => {
-  return datas.value.filter((item) => {
+  return store.gegetCockpitDatas.filter((item) => {
     return item.name.includes(selectName.value)
   })
 })
@@ -106,7 +56,11 @@ const falseModal = () => {
         </template>
       </n-input>
     </div>
-    <Table :data="data" :columns="columns" :func="{ rechargeAdd, consumptionAdd, configAdd }" />
+    <Table
+      :data="data"
+      :columns="store.getCockpitColumns"
+      :func="{ rechargeAdd, consumptionAdd, configAdd }"
+    />
     <n-modal
       v-model:show="rechargeShowModal"
       preset="card"

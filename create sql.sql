@@ -47,6 +47,8 @@ create table overTimeLog -- 加班记录表
     personnelId text,                                        -- 人员 id
     holidayId   text,                                        -- 假期 id
     overTimeId  text,                                        -- 加班 id
+    startTime   text,                                        -- 开始时间
+    endTime     text,                                        -- 结束时间
     number      int,                                         -- 加班小时
     logTime     text default (datetime('now', 'localtime')), -- 日志日期
     description text                                         -- 备注
@@ -60,7 +62,7 @@ create table leaveTime -- 休假表
     description text              -- 备注
 );
 
-create table leaveTimeLog -- 加班记录表
+create table leaveTimeLog -- 休假记录表
 (
     id          text primary key,                            -- 记录 id 软件 生成 uuid4
     personnelId text,                                        -- 人员 id

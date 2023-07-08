@@ -21,18 +21,18 @@ function holidaySelect() {
 function holidayAdd(data: holiday) {
   sqlite.run(
     `
-        INSERT INTO holiday (id, name, status, reset, startTime, description) VALUES ( ?, ?, ?, ?, ?, ?)
+        INSERT INTO holiday (id, name, status, reset, startTime, resetTime, description) VALUES ( ?, ?, ?, ?, ?, ?, ?)
     `,
-    [data.id, data.name, data.status, data.reset, data.startTime, data.description]
+    [data.id, data.name, data.status, data.reset, data.startTime, data.resetTime, data.description]
   )
 }
 
 function holidayUpdate(data: holiday) {
   sqlite.run(
     `
-        UPDATE holiday SET name = ?, status = ?, reset = ?, startTime = ?, description = ? WHERE id = ?
+        UPDATE holiday SET name = ?, status = ?, reset = ?, startTime = ?, resetTime = ?, description = ? WHERE id = ?
     `,
-    [data.name, data.status, data.reset, data.startTime, data.description, data.id]
+    [data.name, data.status, data.reset, data.startTime, data.resetTime, data.description, data.id]
   )
 }
 
@@ -265,18 +265,36 @@ function overTimeLogSelect() {
 function overTimeLogAdd(data: overTimeLog) {
   sqlite.run(
     `
-        INSERT INTO overTimeLog (id, personnelId, holidayId, overTimeId, number, description) VALUES ( ?, ?, ?, ?, ?, ?)
+        INSERT INTO overTimeLog (id, personnelId, holidayId, overTimeId, startTime, endTime, number, description) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?)
     `,
-    [data.id, data.personnelId, data.holidayId, data.overTimeId, data.number, data.description]
+    [
+      data.id,
+      data.personnelId,
+      data.holidayId,
+      data.overTimeId,
+      data.startTime,
+      data.endTime,
+      data.number,
+      data.description
+    ]
   )
 }
 
 function overTimeLogUpdate(data: overTimeLog) {
   sqlite.run(
     `
-        UPDATE overTimeLog SET personnelId = ?, holidayId = ?, overTimeId = ?, number = ?, description = ? WHERE id = ?
+        UPDATE overTimeLog SET personnelId = ?, holidayId = ?, overTimeId = ?, startTime = ?, endTime = ?, number = ?, description = ? WHERE id = ?
     `,
-    [data.personnelId, data.holidayId, data.overTimeId, data.number, data.description, data.id]
+    [
+      data.personnelId,
+      data.holidayId,
+      data.overTimeId,
+      data.startTime,
+      data.endTime,
+      data.number,
+      data.description,
+      data.id
+    ]
   )
 }
 

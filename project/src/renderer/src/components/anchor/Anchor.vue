@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { AliwangwangOutlined } from '@vicons/antd'
+import { AlibabaOutlined } from '@vicons/antd'
 import Meun from './Meun.vue'
 </script>
 
 <template>
   <div class="anchor">
     <div class="title">
-      <AliwangwangOutlined class="favicon" />
+      <AlibabaOutlined class="favicon" />
       <p>假期调度平台</p>
     </div>
     <Meun />

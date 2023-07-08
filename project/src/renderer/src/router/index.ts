@@ -6,6 +6,8 @@ import Personnel from '@renderer/views/Personnel/index.vue'
 import Holiday from '@renderer/views/holiday/index.vue'
 import LeaveTime from '@renderer/views/leaveTime/index.vue'
 import OverTime from '@renderer/views/overTime/index.vue'
+import LeaveTimeLog from '@renderer/views/leaveTimeLog/index.vue'
+import OverTimeLog from '@renderer/views/OverTimeLog/index.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -39,6 +41,16 @@ const router = createRouter({
       path: '/overTime',
       name: 'OverTime',
       component: OverTime
+    },
+    {
+      path: '/LeaveTimeLog',
+      name: 'LeaveTimeLog',
+      component: LeaveTimeLog
+    },
+    {
+      path: '/OverTimeLog',
+      name: 'OverTimeLog',
+      component: OverTimeLog
     }
   ]
 })

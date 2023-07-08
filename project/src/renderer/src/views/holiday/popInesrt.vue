@@ -27,6 +27,7 @@ const model = reactive<holiday>({
   status: 1,
   reset: 0,
   startTime: dayjs().valueOf(),
+  resetTime: dayjs().valueOf(),
   description: ''
 })
 

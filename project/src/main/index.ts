@@ -18,9 +18,9 @@ function createWindow(): void {
     icon: '../../resources/icon.ico?asset',
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
-      sandbox: false,
+      sandbox: false
       // 禁用控制台
-      devTools: false
+      // devTools: false
     }
   })
 

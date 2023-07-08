@@ -5,12 +5,14 @@ import { uuidv4 } from '../../utils/utils'
 import { scheduling, holidayLog } from '../../utils/dbType'
 import { useStore } from '../../store/index'
 
-const { schedulingAdd, holidayLogAdd, schedulingUpdate, holidayLogNewData } = window.api as {
-  schedulingAdd: (data: scheduling) => void
-  holidayLogAdd: (data: holidayLog) => void
-  schedulingUpdate: (data: scheduling) => void
-  holidayLogNewData: (personnelId: string, holidayId: string) => Promise<holidayLog>
-}
+const { schedulingAdd, holidayLogAdd, schedulingUpdate, holidayLogNewData, schedulingSelect } =
+  window.api as {
+    schedulingAdd: (data: scheduling) => void
+    holidayLogAdd: (data: holidayLog) => void
+    schedulingUpdate: (data: scheduling) => void
+    holidayLogNewData: (personnelId: string, holidayId: string) => Promise<holidayLog>
+    schedulingSelect: () => Promise<scheduling[]>
+  }
 
 const props = defineProps<{
   falseModal: () => void
@@ -48,17 +50,20 @@ const handleAdd = () => {
     })
   } else {
     // 获取当前 scheduling 是否有数据，如果 不为 null 说明已经设置过了应该覆盖，如果为 null 说明是第一次设置
-    const index = store.scheduling.findIndex((item) => {
+    const index = store.getScheduling.findIndex((item) => {
       return item.personnelId == model.personnelId && item.holidayId == model.holidayId
     })
 
-    const scheduling = store.scheduling[index]
+    const scheduling = store.getScheduling[index]
 
     if (scheduling && scheduling.vacationTime != null) {
       holidayLogNewData(model.personnelId, model.holidayId).then((res) => {
-        store.scheduling[index].vacationTime =
-          store.scheduling[index].vacationTime - res[0].number + model.vacationTime
-        schedulingUpdate(toRaw(store.scheduling[index]))
+        scheduling.vacationTime = scheduling.vacationTime - res[0].number + model.vacationTime
+        schedulingUpdate(toRaw(scheduling))
+
+        schedulingSelect().then((res) => {
+          store.setScheduling(res)
+        })
       })
     } else {
       schedulingAdd(toRaw(model))
@@ -71,6 +76,7 @@ const handleAdd = () => {
       number: model.vacationTime,
       description: ''
     })
+
     props.falseModal()
   }
 }
@@ -90,14 +96,16 @@ const handleAdd = () => {
       <n-select
         v-model:value="model.holidayId"
         placeholder="Select"
-        :options="store.historyOptions"
+        :options="store.getHolidayObject"
       />
     </n-form-item>
-    <n-form-item label="默认计数" path="defaultNumber">
+    <n-form-item label="默认小时" path="defaultNumber">
       <n-input-number v-model:value="model.vacationTime" />
     </n-form-item>
   </n-form>
-  <n-button strong secondary type="primary" class="btn" @click="handleAdd"> 确认 </n-button>
+  <n-space class="btns">
+    <n-button strong secondary type="primary" class="btn" @click="handleAdd"> 设置 </n-button>
+  </n-space>
 </template>
 
 <style scoped>

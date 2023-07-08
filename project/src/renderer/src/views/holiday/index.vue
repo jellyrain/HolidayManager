@@ -17,6 +17,7 @@ const model = ref<holiday>({
   name: '',
   status: 1,
   startTime: '',
+  resetTime: '',
   reset: 0,
   description: ''
 })

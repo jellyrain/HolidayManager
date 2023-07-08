@@ -103,8 +103,16 @@ function holidayLogNewData(personnelId: string, holidayId: string) {
   return ipcRenderer.invoke('holidayLogNewData', data)
 }
 
+function overTimeLogSelect() {
+  return ipcRenderer.invoke('overTimeLogSelect')
+}
+
 function overTimeLogAdd(data: overTimeLog) {
   return ipcRenderer.invoke('overTimeLogAdd', data)
+}
+
+function leaveTimeLogSelect() {
+  return ipcRenderer.invoke('leaveTimeLogSelect')
 }
 
 function leaveTimeLogAdd(data: leaveTimeLog) {
@@ -135,6 +143,8 @@ export default {
   holidayLogSelect,
   holidayLogAdd,
   holidayLogNewData,
+  overTimeLogSelect,
   overTimeLogAdd,
+  leaveTimeLogSelect,
   leaveTimeLogAdd
 }

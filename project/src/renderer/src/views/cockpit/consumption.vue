@@ -5,9 +5,10 @@ import { uuidv4 } from '../../utils/utils'
 import { scheduling, leaveTimeLog } from '../../utils/dbType'
 import { useStore } from '../../store/index'
 
-const { schedulingUpdate, leaveTimeLogAdd } = window.api as {
+const { schedulingUpdate, leaveTimeLogAdd, schedulingSelect } = window.api as {
   schedulingUpdate: (data: scheduling) => void
   leaveTimeLogAdd: (data: leaveTimeLog) => void
+  schedulingSelect: () => Promise<scheduling[]>
 }
 
 const props = defineProps<{
@@ -21,38 +22,28 @@ const notification = useNotification()
 // 获取 store
 const store = useStore()
 
-const model: scheduling & leaveTimeLog = reactive({
+const model: scheduling & leaveTimeLog & { leaveTimeUnit: number } = reactive({
   id: uuidv4(),
   personnelId: props.personnelId,
   holidayId: '',
   leaveTimeId: '',
+  leaveTimeUnit: 0,
   number: 0,
   vacationTime: 0,
   description: ''
 })
 
-// 获取当前选择的假期的剩余天数
+const leaveTimeUnitObject = [
+  { value: 0, label: '小时(3小时)' },
+  { value: 1, label: '天(6小时)' }
+]
+
+// 获取当前选择的假期剩余天数
 const holidayNumber = computed(() => {
-  const index = store.scheduling.findIndex((item) => {
+  const scheduling = store.scheduling.find((item) => {
     return item.personnelId == model.personnelId && item.holidayId == model.holidayId
   })
-  if (index != -1) {
-    return store.scheduling[index].vacationTime
-  } else {
-    return ''
-  }
-})
-
-// 获取当前选择的休假的单位
-const leaveTimeUnit = computed(() => {
-  const index = store.leaveTime.findIndex((item) => {
-    return item.id == model.leaveTimeId
-  })
-  if (index != -1) {
-    return store.leaveTime[index].unit == 'd' ? '天' : '小时'
-  } else {
-    return ''
-  }
+  return scheduling ? scheduling.vacationTime : ''
 })
 
 // 添加数据
@@ -78,16 +69,14 @@ const handleAdd = () => {
   }
 
   // 获取当前 scheduling 是否有数据，如果 不为 null 说明已经设置过了应该覆盖，如果为 null 说明当前选择的假期此人未配置
-  const index = store.scheduling.findIndex((item) => {
+  const index = store.getScheduling.findIndex((item) => {
     return item.personnelId == model.personnelId && item.holidayId == model.holidayId
   })
 
   const scheduling = store.scheduling[index]
   if (scheduling && scheduling.vacationTime != null) {
     // 如果当前选择的假期剩余天数小于休假天数，提示
-    const number =
-      store.scheduling[index].vacationTime -
-      model.number / store.getLeaveTimeUnit(model.leaveTimeId)
+    const number = scheduling.vacationTime - model.number * (model.leaveTimeUnit == 0 ? 3 : 6)
 
     if (number < 0) {
       notification.warning({
@@ -109,6 +98,11 @@ const handleAdd = () => {
       number: model.number,
       description: model.description
     })
+
+    schedulingSelect().then((res) => {
+      store.setScheduling(res)
+    })
+
     props.falseModal()
   } else {
     notification.warning({
@@ -135,21 +129,25 @@ const handleAdd = () => {
       <n-select
         v-model:value="model.holidayId"
         placeholder="Select"
-        :options="store.historyOptions"
+        :options="store.getHolidayObject"
       />
     </n-form-item>
-    <n-form-item label="当前假期（天）" path="description">
+    <n-form-item label="当前剩余小时" path="description">
       <n-input v-model:value="holidayNumber" placeholder="" disabled="false" />
     </n-form-item>
     <n-form-item label="休假" path="unit">
       <n-select
         v-model:value="model.leaveTimeId"
         placeholder="Select"
-        :options="store.leaveTimeOptions"
+        :options="store.getLeaveTimeObject"
       />
     </n-form-item>
     <n-form-item label="休假计算单位" path="description">
-      <n-input v-model:value="leaveTimeUnit" placeholder="" disabled="false" />
+      <n-select
+        v-model:value="model.leaveTimeUnit"
+        placeholder="Select"
+        :options="leaveTimeUnitObject"
+      />
     </n-form-item>
     <n-form-item label="休假计数" path="defaultNumber">
       <n-input-number v-model:value="model.number" />

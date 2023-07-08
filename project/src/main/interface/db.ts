@@ -23,7 +23,9 @@ import {
   holidayLogSelect,
   holidayLogAdd,
   holidayLogNewData,
+  overTimeLogSelect,
   overTimeLogAdd,
+  leaveTimeLogSelect,
   leaveTimeLogAdd
 } from '../db/api/index'
 import {
@@ -130,8 +132,16 @@ ipcMain.handle('holidayLogNewData', (_event, value: { personnelId: string; holid
   return holidayLogNewData(personnelId, holidayId)
 })
 
+ipcMain.handle('overTimeLogSelect', () => {
+  return overTimeLogSelect()
+})
+
 ipcMain.handle('overTimeLogAdd', (_event, value: overTimeLog) => {
   return overTimeLogAdd(value)
+})
+
+ipcMain.handle('leaveTimeLogSelect', () => {
+  return leaveTimeLogSelect()
 })
 
 ipcMain.handle('leaveTimeLogAdd', (_event, value: leaveTimeLog) => {

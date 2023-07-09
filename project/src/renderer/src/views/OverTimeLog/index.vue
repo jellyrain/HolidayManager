@@ -35,8 +35,8 @@ overTimeLogSelect().then((res) => {
     temp.personnel = store.getPersonnel.filter((i) => i.id === item.personnelId)[0].name
     temp.holiday = store.getHoliday.filter((i) => i.id === item.holidayId)[0].name
     temp.leaveTime = store.getOverTime.filter((i) => i.id === item.overTimeId)[0].name
-    temp.startTime = dayjs(parseFloat(item.startTime)).format('YYYY-MM-DD HH:mm:ss')
-    temp.endTime = dayjs(parseFloat(item.endTime)).format('YYYY-MM-DD HH:mm:ss')
+    temp.startTime = dayjs(parseFloat(item.startTime as string)).format('YYYY-MM-DD HH:mm:ss')
+    temp.endTime = dayjs(parseFloat(item.endTime as string)).format('YYYY-MM-DD HH:mm:ss')
     temp.number = item.number
     temp.logTime = item.logTime
     temp.description = item.description

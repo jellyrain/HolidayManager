@@ -52,8 +52,8 @@ type overTimeLog = {
   personnelId: string
   holidayId: string
   overTimeId: string
-  startTime: string
-  endTime: string
+  startTime: string | number
+  endTime: string | number
   number: number
   logTime?: number
   description: string

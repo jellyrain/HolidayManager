@@ -34,7 +34,7 @@ const model: scheduling & leaveTimeLog & { leaveTimeUnit: number } = reactive({
 })
 
 const leaveTimeUnitObject = [
-  { value: 0, label: '小时(3小时)' },
+  { value: 0, label: '半天(3小时)' },
   { value: 1, label: '天(6小时)' }
 ]
 
@@ -77,6 +77,7 @@ const handleAdd = () => {
   if (scheduling && scheduling.vacationTime != null) {
     // 如果当前选择的假期剩余天数小于休假天数，提示
     const number = scheduling.vacationTime - model.number * (model.leaveTimeUnit == 0 ? 3 : 6)
+    console.log(number)
 
     if (number < 0) {
       notification.warning({
@@ -95,7 +96,7 @@ const handleAdd = () => {
       personnelId: model.personnelId,
       holidayId: model.holidayId,
       leaveTimeId: model.leaveTimeId,
-      number: model.number,
+      number: model.number * (model.leaveTimeUnit == 0 ? 3 : 6),
       description: model.description
     })
 

@@ -18,11 +18,14 @@ function createWindow(): void {
     icon: '../../resources/icon.ico?asset',
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
-      sandbox: false
+      sandbox: false,
       // 禁用控制台
-      // devTools: false
+      devTools: false
     }
   })
+
+  // 默认打开开发者工具
+  // mainWindow.webContents.openDevTools()
 
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()

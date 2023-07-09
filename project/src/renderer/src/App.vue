@@ -2,41 +2,74 @@
 import { NConfigProvider, zhCN, dateZhCN } from 'naive-ui'
 import MenuBar from './components/MenuBar.vue'
 import Anchor from './components/anchor/Anchor.vue'
-import { holiday, leaveTime, overTime, personnel, scheduling } from './utils/dbType'
+import { holiday, holidayLog, leaveTime, overTime, personnel, scheduling } from './utils/dbType'
 import { useStore } from './store'
+import { toRaw } from 'vue'
 
 // 引入 api
-const { holidaySelect, leaveTimeSelect, overTimeSelect, personnelSelect, schedulingSelect } =
-  window.api as {
-    holidaySelect: () => Promise<holiday[]>
-    leaveTimeSelect: () => Promise<leaveTime[]>
-    overTimeSelect: () => Promise<overTime[]>
-    personnelSelect: () => Promise<personnel[]>
-    schedulingSelect: () => Promise<scheduling[]>
-  }
+const {
+  holidaySelect,
+  leaveTimeSelect,
+  overTimeSelect,
+  personnelSelect,
+  schedulingSelect,
+  schedulingUpdate,
+  holidayUpdate,
+  holidayLogNewData
+} = window.api as {
+  holidaySelect: () => Promise<holiday[]>
+  leaveTimeSelect: () => Promise<leaveTime[]>
+  overTimeSelect: () => Promise<overTime[]>
+  personnelSelect: () => Promise<personnel[]>
+  schedulingSelect: () => Promise<scheduling[]>
+  schedulingUpdate: (data: scheduling) => void
+  holidayUpdate: (data: holiday) => void
+  holidayLogNewData: (personnelId: string, holidayId: string) => Promise<holidayLog>
+}
 
 // 初始化数据
 const store = useStore()
 
-holidaySelect().then((res: holiday[]) => {
-  store.holiday = res
-})
+const init = async () => {
+  store.setHoliday(await holidaySelect())
+  store.setLeaveTime(await leaveTimeSelect())
+  store.setOverTime(await overTimeSelect())
+  store.setPersonnel(await personnelSelect())
+  store.setScheduling(await schedulingSelect())
 
-leaveTimeSelect().then((res: leaveTime[]) => {
-  store.leaveTime = res
-})
+  store.getHoliday
+    .filter((item) => {
+      const now = new Date()
+      const resetTime = new Date(parseFloat(item.resetTime as string))
+      const startTime = new Date(parseFloat(item.startTime as string))
+      const nowYear = new Date(now.getFullYear(), startTime.getMonth(), startTime.getDate())
+      return item.reset == 1 && resetTime < nowYear
+    })
+    .forEach((holiday) => {
+      store.getScheduling
+        .filter((scheduling) => {
+          return scheduling.holidayId == holiday.id
+        })
+        .forEach((scheduling) => {
+          holidayLogNewData(scheduling.personnelId, scheduling.holidayId).then((item) => {
+            scheduling.vacationTime = item[0].number
+            schedulingUpdate(toRaw(scheduling))
+          })
+        })
+      holidayUpdate({
+        ...holiday,
+        resetTime: Date.now()
+      })
+    })
+}
 
-overTimeSelect().then((res: overTime[]) => {
-  store.overTime = res
-})
+init()
 
-personnelSelect().then((res: personnel[]) => {
-  store.personnel = res
-})
-
-schedulingSelect().then((res: scheduling[]) => {
-  store.scheduling = res
-})
+setTimeout(() => {
+  schedulingSelect().then((res) => {
+    store.setScheduling(res)
+  })
+}, 500)
 </script>
 
 <template>

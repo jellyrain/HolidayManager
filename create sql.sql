@@ -20,6 +20,7 @@ create table holiday -- 假期表
     status      int,              -- 当前状态 （0 禁用，1 启用）
     reset       int,              -- 是否重置 （0 不重置，1 重置）
     startTime   text,             -- 开始时间
+    resetTime   text,             -- 重置时间
     description text              -- 备注
 );
 
